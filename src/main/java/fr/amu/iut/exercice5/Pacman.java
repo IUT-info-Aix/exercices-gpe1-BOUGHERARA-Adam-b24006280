@@ -34,12 +34,19 @@ public class Pacman extends Personnage {
 
     @Override
     public void deplacerEnBas(double hauteurJeu) {
+        super.deplacerEnBas(hauteurJeu);
         // à compléter
+        bouche.setEndX(bouche.getStartX());
+        bouche.setEndY(bouche.getStartY() + LARGEUR_MOITIE_PERSONNAGE - .5);
     }
 
     @Override
-    public void deplacerEnHaut() {
+    public void deplacerEnHaut(double hauteurJeu) {
         // à compléter
+        super.deplacerEnHaut(hauteurJeu);
+        // à compléter
+        bouche.setEndX(bouche.getStartX());
+        bouche.setEndY(bouche.getStartY() - LARGEUR_MOITIE_PERSONNAGE + .5);
     }
 
 }

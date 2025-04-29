@@ -56,8 +56,11 @@ public class JeuMain extends Application {
                 case RIGHT:
                     j1.deplacerADroite(scene.getWidth());
                     break;
-                case Z:
-                    //j2...... vers le haut;
+                case DOWN:
+                    j1.deplacerEnBas(scene.getHeight());
+                    break;
+                case UP:
+                    j1.deplacerEnHaut(scene.getHeight());
                     break;
 
             }

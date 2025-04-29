@@ -39,6 +39,8 @@ public class Fantome extends Personnage {
 
     @Override
     public void deplacerAGauche() {
+        super.deplacerAGauche();
+        //sens de la bouche
 
 
     }
@@ -54,7 +56,7 @@ public class Fantome extends Personnage {
     }
 
     @Override
-    public void deplacerEnHaut() {
+    public void deplacerEnHaut(double hauteurJeu) {
 
     }
 
