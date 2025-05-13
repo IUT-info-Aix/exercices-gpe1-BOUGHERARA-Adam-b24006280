@@ -1,6 +1,9 @@
-package fr.amu.iut.exercice1;
+package fr.amu.iut.exercice11;
 
 import javafx.application.Application;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -16,10 +19,6 @@ import javafx.stage.Stage;
 
 @SuppressWarnings("Duplicates")
 public class Palette extends Application {
-
-    private int nbVert = 0;
-    private int nbRouge = 0;
-    private int nbBleu = 0;
 
     private Label texteDuHaut;
 
@@ -37,6 +36,8 @@ public class Palette extends Application {
     @Override
     public void start(Stage primaryStage) {
         root = new BorderPane();
+
+        IntegerProperty nbFois = new SimpleIntegerProperty(0);
 
         texteDuHaut = new Label();
         texteDuHaut.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
@@ -57,6 +58,17 @@ public class Palette extends Application {
         rouge = new Button("Rouge");
         bleu = new Button("Bleu");
 
+        vert.setOnAction(event -> {
+            //Quand on clique sur le bouton vert
+        });
+
+        rouge.setOnAction(event -> {
+            //Quand on clique sur le bouton rouge
+        });
+
+        bleu.setOnAction(event -> {
+            //Quand on clique sur le bouton bleu
+        });
         /* VOTRE CODE ICI */
 
         boutons.getChildren().addAll(vert, rouge, bleu);
