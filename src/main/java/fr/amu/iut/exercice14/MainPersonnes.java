@@ -1,5 +1,6 @@
 package fr.amu.iut.exercice14;
 
+import javafx.beans.Observable;
 import javafx.beans.binding.IntegerBinding;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -17,12 +18,95 @@ public class MainPersonnes {
     private static IntegerBinding calculnbParisiens;
 
     public static void main(String[] args) {
+        // Initialisation avec factory pour écouter les propriétés internes
+        lesPersonnes = new SimpleListProperty<>(FXCollections.observableArrayList(personne ->
+                new Observable[] { personne.ageProperty(), personne.villeDeNaissanceProperty() }));
 
-        lesPersonnes = new SimpleListProperty<>(FXCollections.observableArrayList());
         ageMoyen = new SimpleIntegerProperty(0);
+        nbParisiens = new SimpleIntegerProperty(0);
+
+        // Binding bas-niveau pour l'âge moyen
+        calculAgeMoyen = new IntegerBinding() {
+            {
+                // Lier le binding à la liste de personnes
+                bind(lesPersonnes);
+
+                // Ajouter un listener pour rebinder quand la liste change
+                lesPersonnes.addListener((Observable observable) -> {
+                    // Vider les liaisons existantes
+                    unbind(lesPersonnes);
+                    // Rebinder à la liste
+                    bind(lesPersonnes);
+                    // Lier aux propriétés âge de chaque personne
+                    for (Personne p : lesPersonnes) {
+                        bind(p.ageProperty());
+                    }
+                    // Déclencher le recalcul
+                    invalidate();
+                });
+
+                // Lier aux propriétés âge des personnes existantes
+                for (Personne p : lesPersonnes) {
+                    bind(p.ageProperty());
+                }
+            }
+
+            @Override
+            protected int computeValue() {
+                if (lesPersonnes.isEmpty()) return 0;
+
+                int somme = 0;
+                for (Personne p : lesPersonnes) {
+                    somme += p.getAge();
+                }
+                return somme / lesPersonnes.size();
+            }
+        };
+
+        // Binding bas-niveau pour le nombre de parisiens
+        calculnbParisiens = new IntegerBinding() {
+            {
+                // Lier le binding à la liste de personnes
+                bind(lesPersonnes);
+
+                // Ajouter un listener pour rebinder quand la liste change
+                lesPersonnes.addListener((Observable observable) -> {
+                    // Vider les liaisons existantes
+                    unbind(lesPersonnes);
+                    // Rebinder à la liste
+                    bind(lesPersonnes);
+                    // Lier aux propriétés villeDeNaissance de chaque personne
+                    for (Personne p : lesPersonnes) {
+                        bind(p.villeDeNaissanceProperty());
+                    }
+                    // Déclencher le recalcul
+                    invalidate();
+                });
+
+                // Lier aux propriétés villeDeNaissance des personnes existantes
+                for (Personne p : lesPersonnes) {
+                    bind(p.villeDeNaissanceProperty());
+                }
+            }
+
+            @Override
+            protected int computeValue() {
+                int count = 0;
+                for (Personne p : lesPersonnes) {
+                    if ("Paris".equals(p.getVilleDeNaissance())) {
+                        count++;
+                    }
+                }
+                return count;
+            }
+        };
+
+        // Lier les propriétés aux bindings
+        ageMoyen.bind(calculAgeMoyen);
+        nbParisiens.bind(calculnbParisiens);
 
         question1();
-//        question2();
+         question2();
     }
 
     public static void question1() {
@@ -52,6 +136,4 @@ public class MainPersonnes {
             p.setVilleDeNaissance("Paris");
         System.out.println("Il y a " + nbParisiens.getValue() + " parisiens");
     }
-
 }
-
