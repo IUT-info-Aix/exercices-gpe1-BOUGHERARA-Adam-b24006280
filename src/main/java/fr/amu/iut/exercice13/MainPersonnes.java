@@ -1,23 +1,76 @@
 package fr.amu.iut.exercice13;
 
+import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
 @SuppressWarnings("Duplicates")
-public class MainPersonnes  {
+public class MainPersonnes {
 
     private static ObservableList<Personne> lesPersonnes;
-
     private static ListChangeListener<Personne> unChangementListener;
+    private static ListChangeListener<Personne> plusieursChangementsListener;
 
     public static void main(String[] args) {
+        // Pour écouter les changements d'âge
+        lesPersonnes = FXCollections.observableArrayList(personne ->
+                new Observable[] {personne.ageProperty()});
 
-        lesPersonnes = FXCollections.observableArrayList();
+        // Listener pour un seul changement
+        unChangementListener = change -> {
+            if (change.next()) {
+                if (change.wasAdded()) {
+                    for (Personne p : change.getAddedSubList()) {
+                        System.out.println("Ajouté : " + p.getNom());
+                    }
+                }
+                if (change.wasRemoved()) {
+                    for (Personne p : change.getRemoved()) {
+                        System.out.println("Supprimé : " + p.getNom());
+                    }
+                }
+                if (change.wasUpdated()) {
+                    int index = change.getFrom();
+                    Personne p = lesPersonnes.get(index);
+                    System.out.println(p.getNom() + " a maintenant " + p.getAge() + " ans");
+                }
+            }
+        };
 
-//        unChangementListener = à completer
+        // Listener pour plusieurs changements
+        plusieursChangementsListener = change -> {
+            while (change.next()) {
+                if (change.wasAdded()) {
+                    for (Personne p : change.getAddedSubList()) {
+                        System.out.println("Ajouté : " + p.getNom());
+                    }
+                }
+                if (change.wasRemoved()) {
+                    for (Personne p : change.getRemoved()) {
+                        System.out.println("Supprimé : " + p.getNom());
+                    }
+                }
+                if (change.wasUpdated()) {
+                    int index = change.getFrom();
+                    Personne p = lesPersonnes.get(index);
+                    System.out.println(p.getNom() + " a maintenant " + p.getAge() + " ans");
+                }
+            }
+            System.out.println("Fin de la série de changements");
+        };
 
-        lesPersonnes.addListener(unChangementListener);
+        // Pour les questions 1, 2, 3 :
+        //lesPersonnes.addListener(unChangementListener);
+
+        // Pour la question 5 :
+        lesPersonnes.addListener(plusieursChangementsListener);
+
+        // Décommentez la méthode à tester :
+         //question1();
+        // question2();
+        // question3();
+         question5();
     }
 
     public static void question1() {
